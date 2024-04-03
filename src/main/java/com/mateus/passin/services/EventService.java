@@ -2,10 +2,10 @@ package com.mateus.passin.services;
 
 import com.mateus.passin.domain.attendee.Attendee;
 import com.mateus.passin.domain.event.Event;
+import com.mateus.passin.domain.event.exceptions.EventNotFoundException;
 import com.mateus.passin.dto.event.EventIdDTO;
 import com.mateus.passin.dto.event.EventRequestDTO;
 import com.mateus.passin.dto.event.EventResponseDTO;
-import com.mateus.passin.repositories.AttendeeRepository;
 import com.mateus.passin.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventService {
     private  final EventRepository eventRepository;
-    private final AttendeeRepository attendeeRepository;
+    private final AttendeeService attendeeService;
     public EventResponseDTO getEventDetail(String eventId){
-        Event event = this.eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found with id " + eventId));
-        List<Attendee> attendeeList = this.attendeeRepository.findByEventId(eventId);
+        Event event = this.eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("Event not found with id " + eventId));
+        List<Attendee> attendeeList = this.attendeeService.getAllAttendeesFromEvent(eventId);
         return new EventResponseDTO(event, attendeeList.size());
     }
     public EventIdDTO createEvent(EventRequestDTO eventDTO){
@@ -37,8 +37,8 @@ public class EventService {
     private String createSlug(String text){
         String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
         return normalized.replaceAll("[\\p{InCOMBINING_DIACRITICAL_MARKS}]", "")
-                .replaceAll("[^\\w\\a]", "")
-                .replaceAll("\\s+", "")
+                .replaceAll("[^\\w\\s]", "")
+                .replaceAll("\\s+", "-")
                 .toLowerCase();
     }
 }
