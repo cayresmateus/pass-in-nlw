@@ -2,7 +2,6 @@ package com.mateus.passin.controllers;
 
 import com.mateus.passin.dto.attendee.AttendeeBadgeResponseDTO;
 import com.mateus.passin.services.AttendeeService;
-import com.mateus.passin.services.CheckInService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
