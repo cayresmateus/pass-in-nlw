@@ -24,7 +24,7 @@ private final AttendeeService attendeeService;
 
     @PostMapping("/{attendeeId}/check-in")
     public ResponseEntity registerCheckIn(@PathVariable String attendeeId, UriComponentsBuilder uriComponentsBuilder){
-        var uri = uriComponentsBuilder.path("/attendees/{attendee}/badge").buildAndExpand(attendeeId).toUri();
+        var uri = uriComponentsBuilder.path("/attendees/{attendeeId}/badge").buildAndExpand(attendeeId).toUri();
 
         this.attendeeService.checkInAttendee(attendeeId);
         return ResponseEntity.created(uri).build() ;
